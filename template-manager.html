@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Manager</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .template { border: 1px solid #ccc; margin: 10px 0; padding: 10px; }
+        .copy-btn { margin-left: 10px; }
+        .clipboard-message { color: green; display: none; }
+    </style>
+</head>
+<body>
+    <h1>Template Manager</h1>
+    <div id="templates"></div>
+    <input type="text" id="template-input" placeholder="Enter new template" />
+    <button id="add-template-btn">Add Template</button>
+    <script>
+        const templatesContainer = document.getElementById('templates');
+        const templateInput = document.getElementById('template-input');
+        const addTemplateBtn = document.getElementById('add-template-btn');
+
+        addTemplateBtn.addEventListener('click', () => {
+            const templateText = templateInput.value;
+            if (templateText) {
+                const templateDiv = document.createElement('div');
+                templateDiv.className = 'template';
+                templateDiv.textContent = templateText;
+                const copyBtn = document.createElement('button');
+                copyBtn.textContent = 'Copy';
+                copyBtn.className = 'copy-btn';
+                copyBtn.onclick = () => {
+                    navigator.clipboard.writeText(templateText).then(() => {
+                        copyBtn.nextSibling.style.display = 'inline';
+                        setTimeout(() => { copyBtn.nextSibling.style.display = 'none'; }, 2000);
+                    });
+                };
+                const message = document.createElement('span');
+                message.className = 'clipboard-message';
+                message.textContent = 'Copied!';
+                templateDiv.appendChild(copyBtn);
+                templateDiv.appendChild(message);
+                templatesContainer.appendChild(templateDiv);
+                templateInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
