@@ -5,46 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Template Manager</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .template { border: 1px solid #ccc; margin: 10px 0; padding: 10px; }
-        .copy-btn { margin-left: 10px; }
-        .clipboard-message { color: green; display: none; }
+        /* Basic styles */
+        body { font-family: Arial, sans-serif; }
+        .template { border: 1px solid #ccc; padding: 10px; margin: 10px; }
+        .search-bar { margin-bottom: 20px; }
     </style>
 </head>
 <body>
     <h1>Template Manager</h1>
-    <div id="templates"></div>
-    <input type="text" id="template-input" placeholder="Enter new template" />
-    <button id="add-template-btn">Add Template</button>
+    <input type="text" id="searchInput" class="search-bar" placeholder="Search templates...">
+    <div id="templateList">
+        <div class="template" data-name="House Rules Follow Up">House Rules Follow Up <button onclick="editTemplate('House Rules Follow Up')">Edit</button> <button onclick="deleteTemplate('House Rules Follow Up')">Delete</button></div>
+        <div class="template" data-name="Apartment Ready Reply">Apartment Ready Reply <button onclick="editTemplate('Apartment Ready Reply')">Edit</button> <button onclick="deleteTemplate('Apartment Ready Reply')">Delete</button></div>
+        <div class="template" data-name="PTE Request">PTE Request <button onclick="editTemplate('PTE Request')">Edit</button> <button onclick="deleteTemplate('PTE Request')">Delete</button></div>
+        <div class="template" data-name="Late Checkout Request">Late Checkout Request <button onclick="editTemplate('Late Checkout Request')">Edit</button> <button onclick="deleteTemplate('Late Checkout Request')">Delete</button></div>
+        <div class="template" data-name="House Rules Locations">House Rules Locations <button onclick="editTemplate('House Rules Locations')">Edit</button> <button onclick="deleteTemplate('House Rules Locations')">Delete</button></div>
+        <div class="template" data-name="Last Minute Bookings">Last Minute Bookings <button onclick="editTemplate('Last Minute Bookings')">Edit</button> <button onclick="deleteTemplate('Last Minute Bookings')">Delete</button></div>
+        <div class="template" data-name="Early Check-in">Early Check-in <button onclick="editTemplate('Early Check-in')">Edit</button> <button onclick="deleteTemplate('Early Check-in')">Delete</button></div>
+        <div class="template" data-name="Key Management">Key Management <button onclick="editTemplate('Key Management')">Edit</button> <button onclick="deleteTemplate('Key Management')">Delete</button></div>
+        <div class="template" data-name="WiFi Troubleshooting">WiFi Troubleshooting <button onclick="editTemplate('WiFi Troubleshooting')">Edit</button> <button onclick="deleteTemplate('WiFi Troubleshooting')">Delete</button></div>
+        <div class="template" data-name="Guest Communications">Guest Communications <button onclick="editTemplate('Guest Communications')">Edit</button> <button onclick="deleteTemplate('Guest Communications')">Delete</button></div>
+        <div class="template" data-name="BDC Follow Up">BDC Follow Up <button onclick="editTemplate('BDC Follow Up')">Edit</button> <button onclick="deleteTemplate('BDC Follow Up')">Delete</button></div>
+        <div class="template" data-name="BDC Thanks for Booking">BDC Thanks for Booking <button onclick="editTemplate('BDC Thanks for Booking')">Edit</button> <button onclick="deleteTemplate('BDC Thanks for Booking')">Delete</button></div>
+        <div class="template" data-name="Maintenance Issues">Maintenance Issues <button onclick="editTemplate('Maintenance Issues')">Edit</button> <button onclick="deleteTemplate('Maintenance Issues')">Delete</button></div>
+        <div class="template" data-name="Lost Item">Lost Item <button onclick="editTemplate('Lost Item')">Edit</button> <button onclick="deleteTemplate('Lost Item')">Delete</button></div>
+        <div class="template" data-name="Guest Check-in">Guest Check-in <button onclick="editTemplate('Guest Check-in')">Edit</button> <button onclick="deleteTemplate('Guest Check-in')">Delete</button></div>
+        <div class="template" data-name="Discount Requests">Discount Requests <button onclick="editTemplate('Discount Requests')">Edit</button> <button onclick="deleteTemplate('Discount Requests')">Delete</button></div>
+        <div class="template" data-name="Mail Delivery Info">Mail Delivery Info <button onclick="editTemplate('Mail Delivery Info')">Edit</button> <button onclick="deleteTemplate('Mail Delivery Info')">Delete</button></div>
+        <div class="template" data-name="Late Check-out Fee">Late Check-out Fee <button onclick="editTemplate('Late Check-out Fee')">Edit</button> <button onclick="deleteTemplate('Late Check-out Fee')">Delete</button></div>
+        <div class="template" data-name="Alteration Request">Alteration Request <button onclick="editTemplate('Alteration Request')">Edit</button> <button onclick="deleteTemplate('Alteration Request')">Delete</button></div>
+        <div class="template" data-name="Change Guests">Change Guests <button onclick="editTemplate('Change Guests')">Edit</button> <button onclick="deleteTemplate('Change Guests')">Delete</button></div>
+        <div class="template" data-name="Guest Cancelled">Guest Cancelled <button onclick="editTemplate('Guest Cancelled')">Edit</button> <button onclick="deleteTemplate('Guest Cancelled')">Delete</button></div>
+        <div class="template" data-name="Decline LCO">Decline LCO <button onclick="editTemplate('Decline LCO')">Edit</button> <button onclick="deleteTemplate('Decline LCO')">Delete</button></div>
+        <div class="template" data-name="Late CO">Late CO <button onclick="editTemplate('Late CO')">Edit</button> <button onclick="deleteTemplate('Late CO')">Delete</button></div>
+        <div class="template" data-name="3rd Party Booking">3rd Party Booking <button onclick="editTemplate('3rd Party Booking')">Edit</button> <button onclick="deleteTemplate('3rd Party Booking')">Delete</button></div>
+    </div>
     <script>
-        const templatesContainer = document.getElementById('templates');
-        const templateInput = document.getElementById('template-input');
-        const addTemplateBtn = document.getElementById('add-template-btn');
+        // Local storage persistence
+        const templates = [ 'House Rules Follow Up', 'Apartment Ready Reply', 'PTE Request', 'Late Checkout Request', 'House Rules Locations', 'Last Minute Bookings', 'Early Check-in', 'Key Management', 'WiFi Troubleshooting', 'Guest Communications', 'BDC Follow Up', 'BDC Thanks for Booking', 'Maintenance Issues', 'Lost Item', 'Guest Check-in', 'Discount Requests', 'Mail Delivery Info', 'Late Check-out Fee', 'Alteration Request', 'Change Guests', 'Guest Cancelled', 'Decline LCO', 'Late CO', '3rd Party Booking' ];
+        localStorage.setItem('templates', JSON.stringify(templates));
 
-        addTemplateBtn.addEventListener('click', () => {
-            const templateText = templateInput.value;
-            if (templateText) {
-                const templateDiv = document.createElement('div');
-                templateDiv.className = 'template';
-                templateDiv.textContent = templateText;
-                const copyBtn = document.createElement('button');
-                copyBtn.textContent = 'Copy';
-                copyBtn.className = 'copy-btn';
-                copyBtn.onclick = () => {
-                    navigator.clipboard.writeText(templateText).then(() => {
-                        copyBtn.nextSibling.style.display = 'inline';
-                        setTimeout(() => { copyBtn.nextSibling.style.display = 'none'; }, 2000);
-                    });
-                };
-                const message = document.createElement('span');
-                message.className = 'clipboard-message';
-                message.textContent = 'Copied!';
-                templateDiv.appendChild(copyBtn);
-                templateDiv.appendChild(message);
-                templatesContainer.appendChild(templateDiv);
-                templateInput.value = '';
-            }
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            const templateElements = document.querySelectorAll('.template');
+            templateElements.forEach(function(element) {
+                const name = element.dataset.name.toLowerCase();
+                if (name.includes(query)) {
+                    element.style.display = ''; // Show element
+                } else {
+                    element.style.display = 'none'; // Hide element
+                }
+            });
         });
+
+        function editTemplate(templateName) {
+            // Logic to edit the template
+            alert('Editing ' + templateName);
+        }
+
+        function deleteTemplate(templateName) {
+            // Logic to delete the template
+            alert('Deleting ' + templateName);
+        }
     </script>
 </body>
 </html>
